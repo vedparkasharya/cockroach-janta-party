@@ -1,117 +1,169 @@
-import { useEffect, useState } from 'react';
-import { ChevronDown, Users, Calendar, TrendingUp } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 
 export default function Hero() {
-  const [loaded, setLoaded] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoaded(true), 100);
-    return () => clearTimeout(timer);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.3 });
+
+      tl.fromTo(badgeRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+        .fromTo(titleRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, '-=0.5')
+        .fromTo(subtitleRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.5')
+        .fromTo(statsRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.4')
+        .fromTo(ctaRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3');
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleJoinClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('#join')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleManifestoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.querySelector('#manifesto')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Ken Burns */}
-      <div className="absolute inset-0 -z-10">
-        <img
-          src="/assets/hero.jpg"
-          alt="Cockroach Janta Party Rally"
+    <section
+      id="home"
+      ref={sectionRef}
+      className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden"
+    >
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-full object-cover animate-hero-bg"
+          poster="/assets/hero.jpg"
+        >
+          <source src="/assets/hero-rally.mp4" type="video/mp4" />
+        </video>
+        {/* Fallback image if video doesn't load */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(/assets/hero.jpg)' }}
         />
-        <div className="absolute inset-0 bg-black/65" />
+        {/* Gradient Overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.7) 60%, #0A0A0A 100%)',
+          }}
+        />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 text-center pt-20">
-        {/* Tagline */}
+      <div className="relative z-10 text-center px-6 md:px-10 max-w-[900px] mx-auto pt-[72px]">
+        {/* Tricolor Badge */}
         <div
-          className={`mb-6 transition-all duration-700 ${
-            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
+          ref={badgeRef}
+          className="inline-flex items-center px-5 py-1.5 rounded-full mb-8"
+          style={{
+            background: 'linear-gradient(90deg, #FF9933, #FFFFFF, #138808)',
+          }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-medium tracking-widest text-[#FF9933]">
-            <span className="w-2 h-2 rounded-full bg-[#FF9933] animate-pulse" />
-            SECULAR • SOCIALIST • DEMOCRATIC • LAZY
+          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-black/80" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Secular &bull; Socialist &bull; Democratic &bull; Lazy
           </span>
         </div>
 
-        {/* Main Headline */}
+        {/* Title */}
         <h1
-          className={`transition-all duration-1000 delay-150 ${
-            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          ref={titleRef}
+          className="text-white font-black leading-[0.95] tracking-[-0.03em]"
+          style={{
+            fontFamily: 'Poppins, sans-serif',
+            fontSize: 'clamp(48px, 8vw, 96px)',
+          }}
         >
-          <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white leading-[0.9] tracking-tight">
-            COCKROACH
-          </span>
-          <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.9] tracking-tight mt-2 text-tricolor">
+          <span className="block">COCKROACH</span>
+          <span
+            className="block"
+            style={{
+              background: 'linear-gradient(90deg, #FF9933, #FFD700, #138808)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
             JANTA PARTY
           </span>
         </h1>
 
-        {/* Subheadline */}
+        {/* Subtitle */}
         <p
-          className={`mt-6 md:mt-8 text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto font-medium transition-all duration-1000 delay-300 ${
-            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          ref={subtitleRef}
+          className="mt-6 text-lg text-white/80 font-normal max-w-[540px] mx-auto"
         >
-          Voice of the Lazy &amp; Unemployed. India's Viral Youth Political Movement.
+          Voice of the Lazy &amp; Unemployed. India&apos;s Viral Youth Political Movement.
         </p>
 
         {/* Stats */}
         <div
-          className={`mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-6 md:gap-10 transition-all duration-1000 delay-500 ${
-            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          ref={statsRef}
+          className="flex flex-wrap justify-center gap-8 md:gap-12 mt-10"
         >
-          <div className="flex items-center gap-2 text-gray-300">
-            <Users size={20} className="text-[#FF9933]" />
-            <span className="text-sm md:text-base font-semibold">80,000+ Members</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-300">
-            <Calendar size={20} className="text-[#FFFFFF]" />
-            <span className="text-sm md:text-base font-semibold">Founded May 2026</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-300">
-            <TrendingUp size={20} className="text-[#138808]" />
-            <span className="text-sm md:text-base font-semibold">1M+ Followers</span>
-          </div>
+          {[
+            { num: '1,00,000+', label: 'Members' },
+            { num: 'May 2026', label: 'Founded in New Delhi' },
+            { num: '1M+', label: 'Followers' },
+          ].map((stat, i) => (
+            <div key={i} className="text-center">
+              <div
+                className="text-3xl md:text-4xl font-extrabold"
+                style={{
+                  fontFamily: 'Poppins, sans-serif',
+                  background: 'linear-gradient(135deg, #FF9933, #FFD700)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                {stat.num}
+              </div>
+              <div className="text-xs uppercase tracking-[0.1em] text-white/50 mt-1">{stat.label}</div>
+            </div>
+          ))}
         </div>
 
         {/* CTA Buttons */}
         <div
-          className={`mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-1000 delay-700 ${
-            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+          ref={ctaRef}
+          className="flex flex-wrap justify-center gap-4 mt-8"
         >
-          <a
-            href="#join"
-            onClick={(e) => handleClick(e, '#join')}
-            className="px-8 py-4 bg-[#FF9933] text-black font-bold text-lg rounded-lg hover:bg-[#FFAA44] transition-all duration-300 hover:scale-105 saffron-glow animate-pulse-glow"
+          <button
+            onClick={handleJoinClick}
+            className="px-8 py-3.5 rounded-full text-sm font-bold text-black transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            style={{ background: 'linear-gradient(135deg, #FF9933, #FF6600)' }}
           >
             Join the Movement
-          </a>
-          <a
-            href="#manifesto"
-            onClick={(e) => handleClick(e, '#manifesto')}
-            className="px-8 py-4 bg-transparent text-white font-bold text-lg rounded-lg border-2 border-white/30 hover:border-[#FF9933] hover:text-[#FF9933] transition-all duration-300"
+          </button>
+          <button
+            onClick={handleManifestoClick}
+            className="px-8 py-3.5 rounded-full text-sm font-bold text-white border border-white/30 bg-transparent transition-all duration-300 hover:bg-white/10 hover:border-white/50"
           >
             Read Manifesto
-          </a>
+          </button>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
-        <a href="#origin" onClick={(e) => handleClick(e, '#origin')} className="text-white/50 hover:text-white transition-colors">
-          <ChevronDown size={32} />
-        </a>
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-50">
+        <span className="text-[10px] uppercase tracking-[0.2em] text-white/60">Scroll</span>
+        <div className="w-[1px] h-8 bg-gradient-to-b from-white/60 to-transparent" />
       </div>
     </section>
   );

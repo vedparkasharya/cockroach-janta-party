@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Hand } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function FloatingJoinButton() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY > window.innerHeight * 0.5);
+      setVisible(window.scrollY > 600);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -19,14 +18,14 @@ export default function FloatingJoinButton() {
   return (
     <button
       onClick={handleClick}
-      className={`fixed bottom-6 right-6 z-50 px-5 py-3 bg-[#FF6600] text-white font-bold text-sm rounded-full shadow-2xl transition-all duration-500 hover:scale-110 flex items-center gap-2 ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+      className={`fixed bottom-6 right-6 z-40 px-6 py-3 rounded-full text-sm font-bold text-black shadow-lg transition-all duration-500 ${
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
       }`}
       style={{
-        boxShadow: '0 4px 20px rgba(255, 102, 0, 0.5)',
+        background: 'linear-gradient(135deg, #FF9933, #FF6600)',
+        boxShadow: '0 8px 32px rgba(255, 153, 51, 0.4)',
       }}
     >
-      <Hand size={18} />
       Join CJP
     </button>
   );

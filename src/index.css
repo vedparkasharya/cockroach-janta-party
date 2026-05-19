@@ -11,7 +11,7 @@
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 100%;
     --primary: 30 100% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
@@ -24,13 +24,6 @@
     --input: 0 0% 16%;
     --ring: 30 100% 60%;
     --radius: 0.5rem;
-
-    --tricolor-saffron: #FF9933;
-    --tricolor-white: #FFFFFF;
-    --tricolor-green: #138808;
-    --tricolor-blue: #000080;
-    --accent-orange: #FF6600;
-    --accent-cyan: #00E5FF;
   }
 
   * {
@@ -44,10 +37,19 @@
   body {
     background-color: #0A0A0A;
     color: #FFFFFF;
-    font-family: 'Inter', 'Hind', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+  }
+
+  ::selection {
+    background: #FF9933;
+    color: #000;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
   }
 }
 
@@ -62,6 +64,13 @@
 
   .text-tricolor {
     background: linear-gradient(90deg, #FF9933 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #138808 66.66%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-saffron-cyan {
+    background: linear-gradient(135deg, #FF9933 0%, #00E5FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -91,6 +100,22 @@
   .stagger-3 { transition-delay: 0.3s; }
   .stagger-4 { transition-delay: 0.4s; }
   .stagger-5 { transition-delay: 0.5s; }
+
+  .label-accent {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+  }
+
+  .label-saffron {
+    color: #FF9933;
+  }
+
+  .label-cyan {
+    color: #00E5FF;
+  }
 }
 
 @layer utilities {
@@ -177,4 +202,31 @@
 
 .animate-ticker {
   animation: ticker 30s linear infinite;
+}
+
+/* Constitution scroll */
+.constitution-scroll-container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.constitution-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.constitution-card {
+  min-width: 340px;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .constitution-card {
+    min-width: 280px;
+  }
 }

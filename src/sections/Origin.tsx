@@ -1,75 +1,106 @@
-import { ArrowRight, Quote } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Origin() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Left column animation
+      const leftElements = leftRef.current?.querySelectorAll('.animate-item');
+      if (leftElements) {
+        gsap.fromTo(
+          leftElements,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 75%',
+            },
+          }
+        );
+      }
+
+      // Image animation
+      gsap.fromTo(
+        imgRef.current,
+        { opacity: 0, scale: 0.95 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 75%',
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="origin" className="relative py-24 md:py-32 bg-[#0A0A0A]">
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left: Image */}
-          <div className="scroll-reveal order-2 lg:order-1">
-            <div className="relative group">
-              <img
-                src="/assets/mascot.jpg"
-                alt="Cockroach Janta Party Mascot - The Resilient Cockroach Leader"
-                className="w-full rounded-2xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]"
-              />
-              <div className="absolute inset-0 rounded-2xl ring-1 ring-white/10 group-hover:ring-[#FF9933]/30 transition-all duration-500" />
-              {/* Floating badge */}
-              <div className="absolute -bottom-4 -right-4 md:bottom-6 md:right-6 bg-[#0A0A0A] border border-[#FF9933]/30 rounded-xl px-4 py-3 shadow-xl">
-                <p className="text-[#FF9933] font-bold text-sm">EST. MAY 2026</p>
-                <p className="text-gray-400 text-xs">New Delhi, India</p>
-              </div>
-            </div>
-          </div>
+    <section ref={sectionRef} className="bg-[#0A0A0A] py-20 md:py-[120px] px-5 md:px-10">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-center">
+        {/* Left Column - Text */}
+        <div ref={leftRef}>
+          <span className="animate-item label-accent label-saffron block mb-4">THE ORIGIN</span>
+          <h2
+            className="animate-item text-white font-extrabold leading-[1.1]"
+            style={{
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: 'clamp(32px, 4vw, 48px)',
+            }}
+          >
+            When they called us cockroaches, we made it our crown.
+          </h2>
+          <p className="animate-item mt-6 text-base text-white/80 leading-relaxed max-w-[480px]">
+            On May 15, 2026, Chief Justice of India Surya Kant reportedly compared unemployed youth 
+            entering journalism, law, and activism to &ldquo;cockroaches&rdquo; and &ldquo;parasites&rdquo; 
+            attacking the system. The remarks triggered nationwide outrage among India&rsquo;s youth.
+          </p>
+          <p className="animate-item mt-4 text-base text-white/80 leading-relaxed max-w-[480px]">
+            Within 24 hours, Abhijeet Dipke — a 30-year-old PR student at Boston University — 
+            tweeted: &ldquo;What if all the cockroaches come together?&rdquo; That tweet received 
+            700+ reposts. The Cockroach Janta Party was born.
+          </p>
 
-          {/* Right: Content */}
-          <div className="order-1 lg:order-2">
-            <div className="scroll-reveal stagger-1">
-              <span className="inline-block px-3 py-1 bg-[#FF9933]/10 border border-[#FF9933]/20 rounded-full text-[#FF9933] text-xs font-bold tracking-widest uppercase mb-6">
-                Our Origin Story
-              </span>
-            </div>
+          {/* Quote */}
+          <blockquote
+            className="animate-item mt-8 pl-5 border-l-[3px] border-[#00E5FF]"
+          >
+            <p className="text-xl font-medium italic text-[#00E5FF]">
+              &ldquo;What if all the cockroaches come together?&rdquo;
+            </p>
+            <cite className="block mt-2 text-[13px] text-white/50 not-italic">
+              — Abhijeet Dipke, Founder
+            </cite>
+          </blockquote>
+        </div>
 
-            <h2 className="scroll-reveal stagger-2 text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight uppercase">
-              Why <span className="text-[#FF9933]">Cockroach</span>?
-            </h2>
-
-            <div className="scroll-reveal stagger-3 mt-6 space-y-4 text-gray-300 text-base md:text-lg leading-relaxed">
-              <p>
-                When Chief Justice Surya Kant called unemployed youth{' '}
-                <span className="text-[#FF9933] font-semibold">&quot;cockroaches&quot;</span> and{' '}
-                <span className="text-[#FF9933] font-semibold">&quot;parasites&quot;</span>, he didn't know
-                he was giving us our identity. We took his insult and turned it into our strength.
-              </p>
-              <p>
-                The cockroach — the world's most resilient creature. It survives everything.
-                Nuclear blasts, earthquakes, extermination. Just like India's youth. We survive
-                despite a system that tries to crush us.
-              </p>
-            </div>
-
-            {/* Quote */}
-            <div className="scroll-reveal stagger-4 mt-8 relative pl-6 border-l-2 border-[#FF9933]">
-              <Quote size={24} className="absolute -left-3 -top-1 text-[#FF9933] bg-[#0A0A0A]" />
-              <p className="text-white text-lg md:text-xl font-medium italic">
-                &quot;What if all the cockroaches come together?&quot;
-              </p>
-              <p className="mt-2 text-[#FF9933] font-semibold">— Abhijeet Dipke, Founder</p>
-            </div>
-
-            <div className="scroll-reveal stagger-5 mt-8">
-              <a
-                href="#manifesto"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector('#manifesto')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-2 text-[#FF9933] font-bold hover:gap-4 transition-all duration-300"
-              >
-                Read Our Manifesto <ArrowRight size={20} />
-              </a>
-            </div>
-          </div>
+        {/* Right Column - Image */}
+        <div className="flex justify-center lg:justify-end">
+          <img
+            ref={imgRef}
+            src="/assets/resilience.jpg"
+            alt="Cockroach resilience symbol"
+            className="rounded-2xl w-full max-w-[500px] object-cover"
+            style={{
+              boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
+            }}
+          />
         </div>
       </div>
     </section>
